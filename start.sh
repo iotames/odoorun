@@ -1,23 +1,22 @@
 #!/bin/bash
 
-docker run -d --name=santic_erp --restart=always \
--v /home/santic/logs/erp:/var/log/supervisor \
--v /home/santic/santic_erp_odoo:/mnt/extra-addons \
--v /home/santic/configs/erp:/mnt/config \
--v /home/santic/odoo_data/erp:/var/lib/odoo \
--v /home/santic/odoo17.0:/odoo \
--p 8080:8069 \
---link db_16.0:db \
--t odoo17 /usr/bin/supervisord
+# 如果存在 .env 文件，从中读取环境变量
+if [ -f .env ]; then
+    # https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs
+    export $(cat .env | sed 's/#.*//g' | xargs)
+fi
 
+# 获取目录分隔符：如果不存在 DIR_SEPARATOR 环境变量，设置为 '/'
+if [ -z ${DIR_SEPARATOR} ]; then
+    DIR_SEPARATOR=='/'
+fi
 
-# --network=bridge 默认使用桥接网络
-# --runtime=runc 默认使用runc作为容器运行时
-# -t odoo17 /usr/bin/supervisord 指定容器的镜像和启动命令
+# 获取 Odoo 部署目录：如果不存在 ODOO_DEPLOY_HOME 环境变量，设置为用户家目录 HOME
+if [ -z ${ODOO_DEPLOY_HOME} ]; then
+    ODOO_DEPLOY_HOME=${HOME}
+fi
 
-# https://hub.docker.com/_/odoo
-# docker run -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
-# docker run -v odoo-data:/var/lib/odoo -d -p 8069:8069 --name odoo --link db:db -t odoo
-# docker run -d -v odoo-db:/var/lib/postgresql/data -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
+echo "ODOO_DEPLOY_HOME=${ODOO_DEPLOY_HOME}"
 
-
+echo "DIR_SEPARATOR=${DIR_SEPARATOR}"
+bash ${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}start.sh
