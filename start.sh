@@ -16,8 +16,27 @@ if [ -z "${ODOO_DEPLOY_HOME}" ]; then
     ODOO_DEPLOY_HOME=$(pwd)
 fi
 
-echo "DIR_SEPARATOR=${DIR_SEPARATOR}"
-echo "ODOO_DEPLOY_HOME=${ODOO_DEPLOY_HOME}"
+source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}conf.sh"
+source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}func.sh"
+
+# 使用export语法，使得变量可以传递到后续的脚本中
+export DIR_SEPARATOR ODOO_DEPLOY_HOME
+
+# 如果第一个参数是 config 或 conf，则输出所有配置项
+if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
+    echo "当前配置项:"
+    echo "----------------------------------------"
+    echo "DIR_SEPARATOR: ${DIR_SEPARATOR}"
+    echo "ODOO_DEPLOY_HOME: ${ODOO_DEPLOY_HOME}"
+    show_conf
+    exit 0
+fi
+
+PG_START_SCRIPT="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
+if [ ! -f "${PG_START_SCRIPT}" ]; then
+    echo "错误: Postgres 启动脚本不存在: ${PG_START_SCRIPT}"
+    exit 1
+fi
 
 # 检查 Odoo 启动脚本是否存在
 ODOO_START_SCRIPT="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}start.sh"
@@ -27,11 +46,12 @@ if [ ! -f "${ODOO_START_SCRIPT}" ]; then
 fi
 
 # 确保脚本有执行权限
+chmod +x "${PG_START_SCRIPT}"
 chmod +x "${ODOO_START_SCRIPT}"
 
-# 使用export语法，使得变量可以传递到后续的脚本中
-export DIR_SEPARATOR
-export ODOO_DEPLOY_HOME
-
-# 启动 Odoo容器
-sh "${ODOO_START_SCRIPT}"
+if [ "$1" = "start" ]; then
+    # 启动 Postgres 容器
+    sh "${PG_START_SCRIPT}"
+    # 启动 Odoo容器
+    sh "${ODOO_START_SCRIPT}"
+fi
