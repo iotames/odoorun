@@ -12,6 +12,7 @@ if [ ! -d $ODOO_DATA ]; then
   # 挂载 ODOO_DATA 目录时注意是否有写入权限
   echo "mkdir -p $ODOO_DATA"
   mkdir -p $ODOO_DATA
+  chmod 777 $ODOO_DATA
 fi
 
 
@@ -42,11 +43,13 @@ if container_exists "$DOCKER_NAME_ODOO"; then
     echo "容器 $DOCKER_NAME_ODOO 已存在"
 else
     docker run -d \
+      -e INSTALL_MODULES=base \
       -p $ODOO_WEB_PORT:8069 \
       -v $ODOO_DATA:/var/lib/odoo \
       --link $DOCKER_NAME_DB:db \
       --name $DOCKER_NAME_ODOO \
-      $DOCKER_IMAGE_ODOO
+      $DOCKER_IMAGE_ODOO \
+      -- -i base
 fi
 
 # --restart always
@@ -70,3 +73,9 @@ fi
 # https://hub.docker.com/_/odoo
 # docker run -v odoo-data:/var/lib/odoo -d -p 8069:8069 --name odoo --link db:db -t odoo
 # docker run -d -v odoo-db:/var/lib/postgresql/data -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
+
+# db_host = 127.0.0.1
+# db_port = 5432
+# db_user = odoo
+# db_password = root
+# db_name = odoo

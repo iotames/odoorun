@@ -28,13 +28,13 @@ if [ -z "${DB_PORT}" ]; then
     DB_PORT=5432
 fi
 if [ -z "${DB_NAME}" ]; then
-    DB_NAME='postgres'
+    DB_NAME='odoo'
 fi
 if [ -z "${DB_USER}" ]; then
-    DB_USER='postgres'
+    DB_USER='odoo'
 fi
 if [ -z "${DB_PASSWORD}" ]; then
-    DB_PASSWORD='postgres'
+    DB_PASSWORD='odoo'
 fi
 
 show_conf() {

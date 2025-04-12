@@ -49,7 +49,7 @@ fi
 chmod +x "${PG_START_SCRIPT}"
 chmod +x "${ODOO_START_SCRIPT}"
 
-if [ "$1" = "start" ]; then
+if [ "$1" = "all" ]; then
     # 启动 Postgres 容器
     sh "${PG_START_SCRIPT}"
     # 启动 Odoo容器
