@@ -1,7 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "hello word"
-echo "ODOO_DIR=${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo"
+# 定义镜像标签
+ODOO_IMAGE_TAG="17.0-20250401"
+# 定义构建目录
+DOCKER_BUILD_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}17.0"
+
+echo "DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR}"
+echo "ODOO_IMAGE_TAG=${ODOO_IMAGE_TAG}"
+
+# 检查镜像是否存在
+if ! docker images odoo:${ODOO_IMAGE_TAG} | grep -q "${ODOO_IMAGE_TAG}"; then
+    # 镜像不存在，执行构建
+    docker build -t odoo:${ODOO_IMAGE_TAG} ${DOCKER_BUILD_DIR}
+fi
 
 # docker run -d --name=santic_erp --restart=always \
 # -v /home/santic/logs/erp:/var/log/supervisor \
