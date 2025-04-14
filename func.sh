@@ -51,3 +51,11 @@ check_and_mkdir() {
     eval "$MKDIR_CMD"
   fi
 }
+
+# 设置目录为Odoo容器的用户和组
+chown_odoo_dir() {
+  local dirpath=$1
+  CHOWN_CMD="chown -R 101:101 $dirpath"
+  echo "执行命令: $CHOWN_CMD"
+  eval "$CHOWN_CMD"
+}

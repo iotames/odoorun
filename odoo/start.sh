@@ -5,9 +5,31 @@ source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 
 # 检查并创建必要的目录
-check_and_mkdir "$ODOO_DATA"
 check_and_mkdir "$ODOO_CONFIG"
 check_and_mkdir "$ODOO_ADDONS"
+check_and_mkdir "$ODOO_DATA"
+
+# 检查是否需要克隆仓库
+if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
+    # 检查目录是否为空
+    if [ -z "$(ls -A "$ODOO_ADDONS")" ]; then
+        echo "${ODOO_ADDONS}目录内容为空，开始克隆仓库..."
+        # 定义克隆命令
+        CLONE_CMD="cd \"$ODOO_ADDONS\" && git clone \"$ODOO_ADDONS_GIT_URL\" ."
+        echo "执行命令: $CLONE_CMD"
+        eval "$CLONE_CMD"
+    fi
+fi
+
+ODOO_CONFIG_FILE="$ODOO_CONFIG${DIR_SEPARATOR}odoo.conf"
+if [ ! -f "$ODOO_CONFIG_FILE" ]; then
+    echo "创建配置文件 $ODOO_CONFIG_FILE"
+    echo "[options]" > "$ODOO_CONFIG_FILE"
+    echo "addons_path = $ODOO_ADDONS_PATH" >> "$ODOO_CONFIG_FILE"
+fi
+
+chown_odoo_dir "$ODOO_CONFIG"
+chown_odoo_dir "$ODOO_ADDONS"
 
 # 拉取镜像
 if [ -z "${HARBOR_URL:-}" ]; then
@@ -60,9 +82,6 @@ fi
 
 # docker run -d --name=santic_erp --restart=always \
 # -v /home/santic/logs/erp:/var/log/supervisor \
-# -v /home/santic/santic_erp_odoo:/mnt/extra-addons \
-# -v /home/santic/configs/erp:/mnt/config \
-# -v /home/santic/odoo_data/erp:/var/lib/odoo \
 # -v /home/santic/odoo17.0:/odoo \
 # -p 8080:8069 \
 # --link db_16.0:db \
@@ -76,8 +95,13 @@ fi
 # docker run -v odoo-data:/var/lib/odoo -d -p 8069:8069 --name odoo --link db:db -t odoo
 # docker run -d -v odoo-db:/var/lib/postgresql/data -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
 
-# db_host = 127.0.0.1
-# db_port = 5432
+# [options]
+# addons_path = /mnt/extra-addons,/mnt/extra-addons/santic/busyness,/mnt/extra-addons/santic/common,/mnt/extra-addons/santic/tech,/mnt/extra-addons/third_party/common,/mnt/extra-addons/third_party/tech,/mnt/extra-addons/third_party/busyness
+# data_dir = /var/lib/odoo
+# db_host = db
+# db_maxconn = 1000
+# db_name = xxx
+# db_filer = xxx
+# db_password = odoo
 # db_user = odoo
-# db_password = root
-# db_name = odoo
+# without_demo = True

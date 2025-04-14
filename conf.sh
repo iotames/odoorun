@@ -32,6 +32,11 @@ if [ -z "${ODOO_ADDONS}" ]; then
     ODOO_ADDONS="$ODOO_DEPLOY_HOME/odoo/addons"
 fi
 
+# 容器内部的addons_path路径
+if [ -z "${ODOO_ADDONS_PATH}" ]; then
+    ODOO_ADDONS_PATH="/mnt/extra-addons"
+fi
+
 if [ -z "${DB_PORT}" ]; then
     DB_PORT=5432
 fi
@@ -53,7 +58,9 @@ show_conf() {
     echo "DOCKER_NAME_ODOO: ${DOCKER_NAME_ODOO}"
     echo "ODOO_WEB_PORT: ${ODOO_WEB_PORT}"
     echo "ODOO_DATA: ${ODOO_DATA}"
-
+    echo "ODOO_CONFIG: ${ODOO_CONFIG}"
+    echo "ODOO_ADDONS: ${ODOO_ADDONS}"
+    echo "ODOO_ADDONS_PATH: ${ODOO_ADDONS_PATH}"
     echo "DB_PORT: ${DB_PORT}"
     echo "DB_NAME: ${DB_NAME}"
     echo "DB_USER: ${DB_USER}"
