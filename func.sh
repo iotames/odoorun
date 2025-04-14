@@ -40,3 +40,14 @@ container_exists() {
         return 1  # 不存在
     fi
 }
+
+# 检查目录是否存在，不存在则创建并设置权限
+check_and_mkdir() {
+  local dirpath=$1
+  if [ ! -d "$dirpath" ]; then
+    # 挂载目录时注意是否有写入权限
+    MKDIR_CMD="mkdir -p $dirpath && chmod 777 $dirpath"
+    echo "执行命令: $MKDIR_CMD"
+    eval "$MKDIR_CMD"
+  fi
+}

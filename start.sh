@@ -3,6 +3,7 @@
 # 如果存在 .env 文件，从中读取环境变量
 if [ -f .env ]; then
     # https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs
+    echo "发现.env文件，加载环境变量..."
     export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
@@ -16,11 +17,14 @@ if [ -z "${ODOO_DEPLOY_HOME}" ]; then
     ODOO_DEPLOY_HOME=$(pwd)
 fi
 
-source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}conf.sh"
-source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}func.sh"
+# 获取当前shell脚本所在的目录
+RUN_HOME=$(cd "$(dirname "$0")" && pwd)
+
+source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 使用export语法，使得变量可以传递到后续的脚本中
-export DIR_SEPARATOR ODOO_DEPLOY_HOME
+export DIR_SEPARATOR ODOO_DEPLOY_HOME RUN_HOME
 
 # 如果第一个参数是 config 或 conf，则输出所有配置项
 if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
@@ -28,18 +32,19 @@ if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
     echo "----------------------------------------"
     echo "DIR_SEPARATOR: ${DIR_SEPARATOR}"
     echo "ODOO_DEPLOY_HOME: ${ODOO_DEPLOY_HOME}"
+    echo "RUN_HOME: $RUN_HOME"
     show_conf
     exit 0
 fi
 
-PG_START_SCRIPT="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
+PG_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
 if [ ! -f "${PG_START_SCRIPT}" ]; then
     echo "错误: Postgres 启动脚本不存在: ${PG_START_SCRIPT}"
     exit 1
 fi
 
 # 检查 Odoo 启动脚本是否存在
-ODOO_START_SCRIPT="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}start.sh"
+ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}start.sh"
 if [ ! -f "${ODOO_START_SCRIPT}" ]; then
     echo "错误: Odoo 启动脚本不存在: ${ODOO_START_SCRIPT}"
     exit 1

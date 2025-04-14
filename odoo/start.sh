@@ -1,20 +1,13 @@
 #!/bin/sh
 
-source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}conf.sh"
-source "${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}func.sh"
-
-echo "DOCKER_IMAGE_ODOO=${DOCKER_IMAGE_ODOO}"
-echo "ODOO_WEB_PORT=${ODOO_WEB_PORT}"
-echo "ODOO_DATA=${ODOO_DATA}"
+source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 
-if [ ! -d $ODOO_DATA ]; then
-  # 挂载 ODOO_DATA 目录时注意是否有写入权限
-  echo "mkdir -p $ODOO_DATA"
-  mkdir -p $ODOO_DATA
-  chmod 777 $ODOO_DATA
-fi
-
+# 检查并创建必要的目录
+check_and_mkdir "$ODOO_DATA"
+check_and_mkdir "$ODOO_CONFIG"
+check_and_mkdir "$ODOO_ADDONS"
 
 # 拉取镜像
 if [ -z "${HARBOR_URL:-}" ]; then
@@ -42,16 +35,25 @@ fi
 if container_exists "$DOCKER_NAME_ODOO"; then
     echo "容器 $DOCKER_NAME_ODOO 已存在"
 else
-    docker run -d \
-      -e INSTALL_MODULES=base \
+    # 构建完整的docker run命令
+    DOCKER_CMD="docker run -d \
       -p $ODOO_WEB_PORT:8069 \
       -v $ODOO_DATA:/var/lib/odoo \
+      -v $ODOO_CONFIG:/etc/odoo \
+      -v $ODOO_ADDONS:/mnt/extra-addons \
       --link $DOCKER_NAME_DB:db \
       --name $DOCKER_NAME_ODOO \
-      $DOCKER_IMAGE_ODOO \
-      -- -i base
+      $DOCKER_IMAGE_ODOO"
+    
+    # 打印命令
+    echo "执行命令: $DOCKER_CMD"
+    
+    # 执行命令
+    eval "$DOCKER_CMD"
 fi
 
+# -e INSTALL_MODULES=base
+# "-- -i base" 整个命令参数，放在Docker命令的末尾
 # --restart always
 #   -v $ODOO_ADDONS:/mnt/extra-addons
 #   -v $ODOO_CONFIG:/mnt/config
