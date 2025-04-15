@@ -21,15 +21,15 @@ if [ -z "${ODOO_WEB_PORT}" ]; then
 fi
 
 if [ -z "${ODOO_DATA}" ]; then
-    ODOO_DATA="$ODOO_DEPLOY_HOME/odoo/data"
+    ODOO_DATA="$ODOO_DEPLOY_HOME${DIR_SEPARATOR}odoo${DIR_SEPARATOR}data"
 fi
 
 if [ -z "${ODOO_CONFIG}" ]; then
-    ODOO_CONFIG="$ODOO_DEPLOY_HOME/odoo/config"
+    ODOO_CONFIG="$ODOO_DEPLOY_HOME${DIR_SEPARATOR}odoo${DIR_SEPARATOR}config"
 fi
 
 if [ -z "${ODOO_ADDONS}" ]; then
-    ODOO_ADDONS="$ODOO_DEPLOY_HOME/odoo/addons"
+    ODOO_ADDONS="$ODOO_DEPLOY_HOME${DIR_SEPARATOR}odoo${DIR_SEPARATOR}addons"
 fi
 
 # 容器内部的addons_path路径
