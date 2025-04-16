@@ -117,3 +117,40 @@ check_docker_installed() {
         exit 1
     fi
 }
+
+# 函数：从配置文件内容中获取指定配置项的值
+get_config_value() {
+    local config_content="$1"  # 配置文件内容
+    local config_key="$2"      # 要查找的配置项
+
+    # 先检查配置项是否存在
+    if ! echo "$config_content" | grep -q "^[[:space:]]*$config_key[[:space:]]*="; then
+        # 配置项不存在，返回特定的错误标识或空字符串
+        return 1  # 返回非零状态码表示未找到
+    fi
+
+    # 使用grep查找匹配的配置行，然后用awk提取值
+    # -F '=' 指定分隔符为等号
+    # 使用sed去除值两端的空格
+    local value=$(echo "$config_content" | grep "^[[:space:]]*$config_key[[:space:]]*=" | awk -F '=' '{print $2}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    
+    echo "$value"
+    return 0  # 返回成功状态码
+}
+
+# 定义通用配置项检查函数
+add_config_if_missing() {
+    local config_key="$1"
+    local default_value="$2"
+    local config_file="$3"
+    
+    # 检查配置项是否存在
+    if value=$(get_config_value "$(cat "$config_file")" "$config_key"); then
+        echo "配置项 ${config_key} 存在，值为: $value"
+    else
+        # 构造追加命令并执行
+        local add_conf_cmd="echo \"${config_key} = ${default_value}\" >> ${config_file}"
+        echo "配置项不存在。执行命令: $add_conf_cmd"
+        eval "$add_conf_cmd"
+    fi
+}

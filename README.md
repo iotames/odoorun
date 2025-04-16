@@ -27,6 +27,10 @@ ODOO_ADDONS_PATH="/mnt/extra-addons"
 # HARBOR_URL="harbor.example.com"  # 替换为你的Harbor地址
 # HARBOR_USER="admin"              # 默认管理员用户名
 # HARBOR_PASS="Harbor12345"        # 替换为你的Harbor密码（建议从安全途径获取）
+
+# 也可以设置HTTP_PROXY和HTTPS_PROXY：
+HTTP_PROXY="socks5://127.0.0.1:7890"
+HTTPS_PROXY="socks5://127.0.0.1:7890"
 ```
 
 查看当前配置：

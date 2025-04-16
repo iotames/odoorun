@@ -66,6 +66,11 @@ if [ "$1" = "install" ]; then
     sh "${ODOO_START_SCRIPT}"
 fi
 
+ODOO_UPDATE_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}update.sh"
+if [ "$1" = "update" ]; then
+    sh "${ODOO_UPDATE_SCRIPT}"
+fi
+
 if [ "$1" = "docker" ]; then
     DOCKER_ARG="$2"
     if [ "$DOCKER_ARG" = "init" ]; then

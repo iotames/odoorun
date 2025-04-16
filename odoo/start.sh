@@ -32,6 +32,8 @@ fi
 
 chown_odoo_dir "$ODOO_CONFIG"
 chown_odoo_dir "$ODOO_ADDONS"
+chown_odoo_dir "$ODOO_DATA"
+chown_odoo_dir "$ODOO_LOG"
 
 # 拉取镜像
 if [ -z "${HARBOR_URL:-}" ]; then
@@ -50,7 +52,11 @@ if ! image_exists "$DOCKER_IMAGE_ODOO"; then
     # DOCKER_BUILD_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}17.0"
     # echo "DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR}"
     # docker build --progress=plain --no-cache -t DOCKER_IMAGE_ODOO ${DOCKER_BUILD_DIR}
-    docker pull ${DOCKER_IMAGE_ODOO}
+    # 尝试拉取镜像
+    if ! docker pull ${DOCKER_IMAGE_ODOO}; then
+        echo "拉取镜像 ${DOCKER_IMAGE_ODOO} 失败，程序退出"
+        exit 1
+    fi
 else
     echo "镜像 ${DOCKER_IMAGE_ODOO} 已存在"
 fi
@@ -84,7 +90,6 @@ fi
 #   -v $ODOO_CONFIG:/mnt/config
 
 # docker run -d --name=santic_erp --restart=always \
-# -v /home/santic/logs/erp:/var/log/supervisor \
 # -v /home/santic/odoo17.0:/odoo \
 # -p 8080:8069 \
 # --link db_16.0:db \
@@ -101,6 +106,7 @@ fi
 # [options]
 # addons_path = /mnt/extra-addons,/mnt/extra-addons/santic/busyness,/mnt/extra-addons/santic/common,/mnt/extra-addons/santic/tech,/mnt/extra-addons/third_party/common,/mnt/extra-addons/third_party/tech,/mnt/extra-addons/third_party/busyness
 # data_dir = /var/lib/odoo
+# logfile = /var/log/odoo/odoo.log
 # db_host = db
 # db_maxconn = 1000
 # db_name = xxx

@@ -25,7 +25,10 @@ else
 fi
 
 if ! image_exists "$DOCKER_IMAGE_DB"; then
-    docker pull ${DOCKER_IMAGE_DB}
+    if ! docker pull ${DOCKER_IMAGE_DB}; then
+        echo "拉取镜像 ${DOCKER_IMAGE_DB} 失败，退出程序"
+        exit 1
+    fi
 else
     echo "镜像 ${DOCKER_IMAGE_DB} 已存在"
 fi
