@@ -3,8 +3,8 @@
 1. 克隆项目：git clone http://172.16.160.10:8929/santic/odoorun.git
 2. 设置项目的部署目录：export ODOO_DEPLOY_HOME=/root/erp
 3. 查看当前配置：`./odoorun/run.sh config`
-4. 初始化Docker：`./odoorun/run.sh docker init` (配置国内镜像源，加速下载)
-5. 安装Odoo项目：`./odoorun/run.sh install`
+4. 安装Odoo项目：`./odoorun/run.sh install`
+5. 升级Odoo项目：`./odoorun/run.sh update`
 
 
 ## 配置说明

@@ -3,6 +3,21 @@
 source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
+# 更新代码仓库
+if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
+    # 检查是否存在.git目录
+    if [ -d "${ODOO_ADDONS}/.git" ]; then
+        echo "检测到${ODOO_ADDONS}目录下存在.git，执行git pull操作..."
+        # git config --global --add safe.directory ${ODOO_ADDONS}
+        # 定义git pull命令
+        PULL_CMD="cd \"$ODOO_ADDONS\" && git pull"
+        echo "执行命令: $PULL_CMD"
+        eval "$PULL_CMD"
+    else
+        echo "${ODOO_ADDONS}目录下不存在.git目录，跳过git pull操作"
+    fi
+fi
+
 ODOO_CONFIG_FILE="$ODOO_CONFIG${DIR_SEPARATOR}odoo.conf"
 
 # 检查配置文件是否存在

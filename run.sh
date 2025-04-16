@@ -38,17 +38,7 @@ if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
 fi
 
 PG_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
-if [ ! -f "${PG_START_SCRIPT}" ]; then
-    echo "错误: Postgres 启动脚本不存在: ${PG_START_SCRIPT}"
-    exit 1
-fi
-
-# 检查 Odoo 启动脚本是否存在
-ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}start.sh"
-if [ ! -f "${ODOO_START_SCRIPT}" ]; then
-    echo "错误: Odoo 启动脚本不存在: ${ODOO_START_SCRIPT}"
-    exit 1
-fi
+ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}install.sh"
 
 # 确保脚本有执行权限
 chmod +x "${PG_START_SCRIPT}"
