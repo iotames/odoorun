@@ -55,8 +55,21 @@ chmod +x "${PG_START_SCRIPT}"
 chmod +x "${ODOO_START_SCRIPT}"
 
 if [ "$1" = "install" ]; then
+    # 检查 ODOO_DEPLOY_HOME 目录是否存在
+    if [ ! -d "${ODOO_DEPLOY_HOME}" ]; then
+        echo "错误: Odoo 部署目录不存在: ${ODOO_DEPLOY_HOME}"
+        exit 1
+    fi
     # 启动 Postgres 容器
     sh "${PG_START_SCRIPT}"
     # 启动 Odoo容器
     sh "${ODOO_START_SCRIPT}"
+fi
+
+if [ "$1" = "docker" ]; then
+    DOCKER_ARG="$2"
+    if [ "$DOCKER_ARG" = "init" ]; then
+        DOCKER_INIT_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}init_etc.sh"
+        sh "${DOCKER_INIT_SCRIPT}"
+    fi
 fi

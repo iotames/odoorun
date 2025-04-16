@@ -3,6 +3,8 @@
 source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
+echo "HARBOR_URL=${HARBOR_URL}||HARBOR_USER=${HARBOR_USER}"
+
 PG_DATA_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}data"
 
 if [ ! -d $PG_DATA_DIR ]; then

@@ -3,11 +3,13 @@
 source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
+echo "HARBOR_URL=${HARBOR_URL}||HARBOR_USER=${HARBOR_USER}"
 
 # 检查并创建必要的目录
 check_and_mkdir "$ODOO_CONFIG"
 check_and_mkdir "$ODOO_ADDONS"
 check_and_mkdir "$ODOO_DATA"
+check_and_mkdir "$ODOO_LOG"
 
 # 检查是否需要克隆仓库
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
@@ -63,6 +65,7 @@ else
       -v $ODOO_DATA:/var/lib/odoo \
       -v $ODOO_CONFIG:/etc/odoo \
       -v $ODOO_ADDONS:/mnt/extra-addons \
+      -v $ODOO_LOG:/var/log/odoo \
       --link $DOCKER_NAME_DB:db \
       --name $DOCKER_NAME_ODOO \
       $DOCKER_IMAGE_ODOO"

@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# 配置变量
-# HARBOR_URL="harbor.example.com"  # 替换为你的Harbor地址
-HARBOR_USER="admin"              # 默认管理员用户名
-HARBOR_PASS="Harbor12345"        # 替换为你的Harbor密码（建议从安全途径获取）
-
 # 函数：登录Harbor（支持HTTP/HTTPS）
 login_harbor() {
     if ! docker login -u "$HARBOR_USER" -p "$HARBOR_PASS" "$HARBOR_URL"; then
@@ -58,4 +53,67 @@ chown_odoo_dir() {
   CHOWN_CMD="chown -R 101:101 $dirpath"
   echo "执行命令: $CHOWN_CMD"
   eval "$CHOWN_CMD"
+}
+
+# 函数：重启Docker服务使配置生效
+restart_docker() {
+    # 检测操作系统类型
+    if [ "$(uname)" = "Darwin" ]; then
+        # macOS系统
+        echo "检测到macOS系统，重启Docker Desktop..."
+        osascript -e 'quit app "Docker"'
+        sleep 2
+        open -a Docker
+        # 等待Docker完全启动
+        echo "等待Docker服务启动..."
+        while ! docker info >/dev/null 2>&1; do
+            sleep 1
+        done
+    else
+        # Linux系统
+        echo "检测到Linux系统，重启Docker服务..."
+        # 尝试使用systemctl（适用于systemd系统）
+        if command -v systemctl >/dev/null 2>&1; then
+            systemctl restart docker
+        # 尝试使用service（适用于旧版本Linux）
+        elif command -v service >/dev/null 2>&1; then
+            service docker restart
+        else
+            echo "无法识别服务管理器，请手动重启Docker服务"
+            exit 1
+        fi
+    fi
+    
+    # 等待Docker服务完全启动
+    echo "等待Docker服务就绪..."
+    while ! docker info >/dev/null 2>&1; do
+        sleep 1
+    done
+    echo "Docker服务已重启完成！"
+}
+
+# 函数：检查Docker是否已安装
+check_docker_installed() {
+    # 检查docker命令是否存在
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "错误: Docker未安装！"
+        echo "请先安装Docker:"
+        
+        # 根据操作系统提供安装建议
+        if [ "$(uname)" = "Darwin" ]; then
+            echo "macOS: 请访问 https://docs.docker.com/desktop/mac/install/ 下载安装Docker Desktop"
+        elif [ "$(uname)" = "Linux" ]; then
+            echo "Linux: 请参考 https://docs.docker.com/engine/install/ 选择适合您发行版的安装方法"
+            # 检测常见Linux发行版
+            if [ -f /etc/debian_version ]; then
+                echo "Debian/Ubuntu: sudo apt-get update && sudo apt-get install docker-ce"
+            elif [ -f /etc/redhat-release ]; then
+                echo "CentOS/RHEL: sudo yum install docker-ce"
+            fi
+        elif [ "$(uname -s)" = "Windows_NT" ]; then
+            echo "Windows: 请访问 https://docs.docker.com/desktop/windows/install/ 下载安装Docker Desktop"
+        fi
+        
+        exit 1
+    fi
 }
