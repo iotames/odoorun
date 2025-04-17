@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 检查docker是否已安装
 check_docker_installed

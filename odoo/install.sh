@@ -1,7 +1,7 @@
 #!/bin/sh
 
-source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 检查并创建必要的目录
 check_and_mkdir "$ODOO_CONFIG"

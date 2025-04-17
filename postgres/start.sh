@@ -1,7 +1,7 @@
 #/bin/sh
 
-source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 PG_DATA_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}data"
 

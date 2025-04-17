@@ -20,8 +20,8 @@ fi
 # 获取当前shell脚本所在的目录
 RUN_HOME=$(cd "$(dirname "$0")" && pwd)
 
-source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 使用export语法，使得变量可以传递到后续的脚本中
 export DIR_SEPARATOR ODOO_DEPLOY_HOME RUN_HOME

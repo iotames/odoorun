@@ -1,7 +1,7 @@
 #!/bin/sh
 
-source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 更新代码仓库
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
