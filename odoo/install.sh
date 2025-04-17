@@ -3,8 +3,6 @@
 source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
-echo "HARBOR_URL=${HARBOR_URL}||HARBOR_USER=${HARBOR_USER}"
-
 # 检查并创建必要的目录
 check_and_mkdir "$ODOO_CONFIG"
 check_and_mkdir "$ODOO_ADDONS"
@@ -39,7 +37,7 @@ chown_odoo_dir "$ODOO_LOG"
 if [ -z "${HARBOR_URL:-}" ]; then
     echo "HARBOR_URL未设置，检查默认镜像：$DOCKER_IMAGE_ODOO"
 else
-    DOCKER_IMAGE_ODOO="$HARBOR_URL/$DOCKER_IMAGE_ODOO"
+    DOCKER_IMAGE_ODOO=$(get_harbor_image "$DOCKER_IMAGE_ODOO")
     echo "检测到HARBOR_URL，检查Harbor镜像：$DOCKER_IMAGE_ODOO"
     if ! image_exists "$DOCKER_IMAGE_ODOO"; then
         login_harbor  # 仅在需要拉取时登录

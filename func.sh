@@ -2,6 +2,12 @@
 
 # 函数：登录Harbor（支持HTTP/HTTPS）
 login_harbor() {
+    # 检查HARBOR_PASS是否为空
+    if [ -z "$HARBOR_PASS" ]; then
+        echo "HARBOR_PASS 密码为空。默认后续的docker操作不需要登录"
+        return 0
+    fi
+
     if ! docker login -u "$HARBOR_USER" -p "$HARBOR_PASS" "$HARBOR_URL"; then
         echo "Harbor登录失败！请检查："
         echo "1. Harbor地址是否正确: $HARBOR_URL"
@@ -11,6 +17,21 @@ login_harbor() {
     fi
 }
 
+# 函数：获取Harbor镜像。如：postgres:16.0 -> 172.16.160.33:9000/library/postgres:16.0
+get_harbor_image() {
+    local image_name="$1"
+    
+    # 获取IMAGE_PREFIX（去除协议头和末尾斜杠）
+    IMAGE_PREFIX=$(echo "$HARBOR_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/$||')
+    
+    # 检查image_name格式，如果不包含斜杠，则添加library/前缀
+    if ! echo "$image_name" | grep -q "/"; then
+        image_name="library/$image_name"
+    fi
+    
+    # 返回完整的Harbor镜像路径
+    echo "$IMAGE_PREFIX/$image_name"
+}
 
 # 函数：检查镜像是否已存在本地
 image_exists() {

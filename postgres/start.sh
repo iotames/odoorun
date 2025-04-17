@@ -3,21 +3,16 @@
 source "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 source "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
-echo "HARBOR_URL=${HARBOR_URL}||HARBOR_USER=${HARBOR_USER}"
-
 PG_DATA_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}data"
 
-if [ ! -d $PG_DATA_DIR ]; then
-  # 挂载 PG_DATA_DIR 目录时注意是否有写入权限
-  echo "mkdir -p $PG_DATA_DIR"
-  mkdir -p $PG_DATA_DIR
-fi
+# 检查并创建必要的目录
+check_and_mkdir "$PG_DATA_DIR"
 
 # 拉取镜像
 if [ -z "${HARBOR_URL:-}" ]; then
     echo "HARBOR_URL未设置，检查默认镜像：$DOCKER_IMAGE_DB"
 else
-    DOCKER_IMAGE_DB="$HARBOR_URL/$DOCKER_IMAGE_DB"
+    DOCKER_IMAGE_DB=$(get_harbor_image "$DOCKER_IMAGE_DB")
     echo "检测到HARBOR_URL，检查Harbor镜像：$DOCKER_IMAGE_DB"
     if ! image_exists "$DOCKER_IMAGE_DB"; then
         login_harbor  # 仅在需要拉取时登录

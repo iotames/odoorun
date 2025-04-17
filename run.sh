@@ -56,8 +56,8 @@ if [ "$1" = "install" ]; then
     sh "${ODOO_START_SCRIPT}"
 fi
 
-ODOO_UPDATE_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}update.sh"
 if [ "$1" = "update" ]; then
+    ODOO_UPDATE_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}update.sh"
     sh "${ODOO_UPDATE_SCRIPT}"
 fi
 
