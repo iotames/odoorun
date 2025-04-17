@@ -33,6 +33,14 @@ else
     echo "配置文件不存在: $ODOO_CONFIG_FILE"
 fi
 
+# 进入$DOCKER_NAME_ODOO容器执行命令
+docker exec -it $DOCKER_NAME_ODOO /bin/bash -c "if [ -f /mnt/extra-addons/requirements.txt ]; then \
+    echo '检测到requirements.txt文件，开始安装依赖...' && \
+    pip install -r /mnt/extra-addons/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/; \
+else \
+    echo 'requirements.txt文件不存在，跳过依赖安装'; \
+fi"
+
 # 重启ODOO容器
 docker restart $DOCKER_NAME_ODOO
 if [ $? -eq 0 ]; then
