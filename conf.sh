@@ -63,6 +63,10 @@ if [ -z "${DB_PASSWORD}" ]; then
     DB_PASSWORD='odoo'
 fi
 
+if [ -z "${ODOO_ADDONS_GIT_BRANCH}" ]; then
+    ODOO_ADDONS_GIT_BRANCH='dev'
+fi
+
 show_conf() {
     echo "DOCKER_IMAGE_DB: ${DOCKER_IMAGE_DB}"
     echo "DOCKER_IMAGE_ODOO: ${DOCKER_IMAGE_ODOO}"
@@ -75,6 +79,7 @@ show_conf() {
     echo "ODOO_LOG: ${ODOO_LOG}"
     echo "ODOO_ADDONS_PATH: ${ODOO_ADDONS_PATH}"
     echo "ODOO_ADDONS_GIT_URL: ${ODOO_ADDONS_GIT_URL}"
+    echo "ODOO_ADDONS_GIT_BRANCH: ${ODOO_ADDONS_GIT_BRANCH}"
     echo "DB_PORT: ${DB_PORT}"
     echo "DB_NAME: ${DB_NAME}"
     echo "DB_USER: ${DB_USER}"

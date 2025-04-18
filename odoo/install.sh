@@ -15,7 +15,7 @@ if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
     if [ -z "$(ls -A "$ODOO_ADDONS")" ]; then
         echo "${ODOO_ADDONS}目录内容为空，开始克隆仓库..."
         # 定义克隆命令
-        CLONE_CMD="cd \"$ODOO_ADDONS\" && git clone \"$ODOO_ADDONS_GIT_URL\" ."
+        CLONE_CMD="cd $ODOO_ADDONS && git clone -b ${ODOO_ADDONS_GIT_BRANCH} --single-branch \"$ODOO_ADDONS_GIT_URL\" ."
         echo "执行命令: $CLONE_CMD"
         eval "$CLONE_CMD"
     fi

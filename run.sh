@@ -37,28 +37,35 @@ if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
     exit 0
 fi
 
-PG_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
-ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}install.sh"
-
-# 确保脚本有执行权限
-chmod +x "${PG_START_SCRIPT}"
-chmod +x "${ODOO_START_SCRIPT}"
-
 if [ "$1" = "install" ]; then
     # 检查 ODOO_DEPLOY_HOME 目录是否存在
     if [ ! -d "${ODOO_DEPLOY_HOME}" ]; then
         echo "错误: Odoo 部署目录不存在: ${ODOO_DEPLOY_HOME}"
         exit 1
     fi
+
     # 启动 Postgres 容器
+    PG_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
+    chmod +x "${PG_START_SCRIPT}"
     sh "${PG_START_SCRIPT}"
+
     # 启动 Odoo容器
+    ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}install.sh"
+    chmod +x "${ODOO_START_SCRIPT}"
     sh "${ODOO_START_SCRIPT}"
 fi
 
 if [ "$1" = "update" ]; then
     ODOO_UPDATE_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}update.sh"
+    chmod +x "${ODOO_UPDATE_SCRIPT}"
     sh "${ODOO_UPDATE_SCRIPT}"
+fi
+
+if [ "$1" = "checkout" ]; then
+    ODOO_CHECKOUT_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}checkout.sh"
+    export CHECKOUT_ARG="$2"
+    chmod +x "${ODOO_CHECKOUT_SCRIPT}"
+    sh "${ODOO_CHECKOUT_SCRIPT}"
 fi
 
 if [ "$1" = "docker" ]; then

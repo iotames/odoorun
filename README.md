@@ -1,10 +1,11 @@
 ## 快速开始
 
-1. 克隆项目：git clone http://172.16.160.10:8929/santic/odoorun.git
-2. 设置项目的部署目录：export ODOO_DEPLOY_HOME=/root/erp
+1. 克隆项目：git clone xxxxx/odoorun.git
+2. 设置项目的部署目录：export ODOO_DEPLOY_HOME=/your/path/to/odoo
 3. 查看当前配置：`./odoorun/run.sh config`
-4. 安装Odoo项目：`./odoorun/run.sh install`
-5. 升级Odoo项目：`./odoorun/run.sh update`
+4. 运行Odoo容器：`./odoorun/run.sh install`
+5. 安装数据库：浏览器访问 `http://127.0.0.1:8069/`。填写 `Database Name`(数据库名)，`Email`(登录账号)，`Password`(密码)，点击 `Create database` 按钮。
+6. 升级Odoo项目：`./odoorun/run.sh update`
 
 
 ## 配置说明
@@ -22,6 +23,9 @@ ODOO_ADDONS_GIT_URL="http://127.0.0.1:8080/erp/odoo_addons.git"
 
 # 定义容器内部的扩展模块目录
 ODOO_ADDONS_PATH="/mnt/extra-addons"
+
+# 定义默认的使用的Git分支
+ODOO_ADDONS_GIT_BRANCH="master"
 
 # 也可以配置Harbor仓库来下载Docker镜像：
 # HARBOR_URL="127.0.0.1:9000"  # 替换为你的Harbor地址

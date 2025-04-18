@@ -7,10 +7,10 @@
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
     # 检查是否存在.git目录
     if [ -d "${ODOO_ADDONS}/.git" ]; then
-        echo "检测到${ODOO_ADDONS}目录下存在.git，执行git pull操作..."
+        echo "检测到${ODOO_ADDONS}目录存在.git，执行git pull操作..."
         # git config --global --add safe.directory ${ODOO_ADDONS}
         # 定义git pull命令
-        PULL_CMD="cd \"$ODOO_ADDONS\" && git pull"
+        PULL_CMD="cd \"$ODOO_ADDONS\" && git pull origin ${ODOO_ADDONS_GIT_BRANCH}:${ODOO_ADDONS_GIT_BRANCH} && git switch ${ODOO_ADDONS_GIT_BRANCH}"
         echo "执行命令: $PULL_CMD"
         eval "$PULL_CMD"
     else
