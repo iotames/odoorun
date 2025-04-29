@@ -33,7 +33,7 @@ if container_exists "$DOCKER_NAME_DB"; then
     echo "容器 $DOCKER_NAME_DB 已存在"
 else
     # 构建完整的docker run命令
-    DOCKER_CMD="docker run -d \
+    DOCKER_CMD="docker run --restart=always -d \
       -e POSTGRES_USER=$DB_USER \
       -e POSTGRES_PASSWORD=$DB_PASSWORD \
       -e POSTGRES_DB=$DB_NAME \

@@ -5,7 +5,7 @@
 # CI_PIPELINE_SOURCE:merge_request_event, CI_MERGE_REQUEST_EVENT_TYPE(detached), CI_MERGE_REQUEST_TARGET_BRANCH_NAME(dev), CI_MERGE_REQUEST_TITLE(更新README.md文件，升级容器化快速部署流程。)
 
 # 合并请求通过之后。
-# CI_PIPELINE_SOURCE(push), CI_COMMIT_BRANCH(dev)
+# CI_PIPELINE_SOURCE(push), CI_COMMIT_BRANCH(dev), CI_COMMIT_AUTHOR(authorname <xxxxx@qq.com>)
 # CI_COMMIT_TITLE(Merge branch 'feature/yourbranch_20250417' into 'dev')
 # CI_COMMIT_MESSAGE(Merge branch 'feature/yourbranch_20250417' into 'dev'
 # 更新README.md文件，升级容器化快速部署流程。
