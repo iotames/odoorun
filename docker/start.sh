@@ -1,6 +1,70 @@
 #!/bin/sh
 
-# TODO
+# 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
+# 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
+# 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
+. "${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}prepare.sh"
+. "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
+
+DOCKER_COMPOSE_FILE="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}docker-compose.yml"
+
+
+# docker-compose 可能在子Shell执行，故export导出变量
+
+export DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO
+export DOCKER_NAME_ODOO=$DOCKER_NAME_ODOO
+export ODOO_WEB_PORT=$ODOO_WEB_PORT
+export ODOO_DATA=$ODOO_DATA
+export ODOO_CONFIG=$ODOO_CONFIG
+export ODOO_ADDONS=$ODOO_ADDONS
+export ODOO_LOG=$ODOO_LOG
+export DOCKER_IMAGE_DB=$DOCKER_IMAGE_DB
+export DOCKER_NAME_DB=$DOCKER_NAME_DB
+export DB_USER=$DB_USER
+export DB_PASSWORD=$DB_PASSWORD
+export DB_PORT=$DB_PORT
+export PG_DATA_DIR=$PG_DATA_DIR
+
+# 检查系统是否存在docker-compose命令
+if command -v docker-compose >/dev/null 2>&1; then
+    DOCKER_CMD="docker-compose"
+else
+    # 如果不存在docker-compose，则使用docker compose
+    DOCKER_CMD="docker compose"
+fi
+
+case "$1" in
+    "up")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} up -d
+        ;;
+    "down")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} down
+        ;;
+    "start")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} start
+        ;;
+    "stop")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} stop
+        ;;
+    "restart")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} restart
+        ;;
+    "logs")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} logs
+        ;;
+    "ps")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} ps
+        ;;
+    "rm")
+        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} rm -f
+        ;;
+    *)
+        # 显示使用帮助
+        echo "用法: $0 {up|down|start|stop|restart|logs|ps|rm}"
+        exit 1
+        ;;
+esac
+
 
 # ./odoo-bin --save --config=odoo.conf 将当前配置保存到文件，便于复用
 # odoo-bin -i sale,purchase --stop-after-init

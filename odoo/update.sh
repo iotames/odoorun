@@ -1,7 +1,9 @@
 #!/bin/sh
 
-. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
+# 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
+# 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
+# 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
+. "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
 
 # 更新代码仓库
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
@@ -18,7 +20,6 @@ if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
     fi
 fi
 
-ODOO_CONFIG_FILE="$ODOO_CONFIG${DIR_SEPARATOR}odoo.conf"
 
 # 检查配置文件是否存在
 if [ -f "$ODOO_CONFIG_FILE" ]; then
@@ -34,10 +35,10 @@ else
     exit 1
 fi
 
+# 更新requirements.txt模块依赖
 update_requirements
-# TODO 使用 -u all 更新所有模块
-# 执行命令
-# docker exec -u odoo $DOCKER_NAME_ODOO odoo -d $DB_NAME -u all --stop-after-init
+# 更新所有模块
+docker exec $DOCKER_NAME_ODOO odoo -u all --stop-after-init
 
 # 重启ODOO容器
 docker restart $DOCKER_NAME_ODOO

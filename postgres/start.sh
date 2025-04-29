@@ -1,32 +1,9 @@
 #/bin/sh
 
-. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
-. "${RUN_HOME}${DIR_SEPARATOR}func.sh"
-
-PG_DATA_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}data"
-
-# 检查并创建必要的目录
-check_and_mkdir "$PG_DATA_DIR"
-
-# 拉取镜像
-if [ -z "${HARBOR_URL:-}" ]; then
-    echo "HARBOR_URL未设置，检查默认镜像：$DOCKER_IMAGE_DB"
-else
-    DOCKER_IMAGE_DB=$(get_harbor_image "$DOCKER_IMAGE_DB")
-    echo "检测到HARBOR_URL，检查Harbor镜像：$DOCKER_IMAGE_DB"
-    if ! image_exists "$DOCKER_IMAGE_DB"; then
-        login_harbor  # 仅在需要拉取时登录
-    fi
-fi
-
-if ! image_exists "$DOCKER_IMAGE_DB"; then
-    if ! docker pull ${DOCKER_IMAGE_DB}; then
-        echo "拉取镜像 ${DOCKER_IMAGE_DB} 失败，退出程序"
-        exit 1
-    fi
-else
-    echo "镜像 ${DOCKER_IMAGE_DB} 已存在"
-fi
+# 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
+# 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
+# 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
+. "${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}prepare.sh"
 
 # 启动容器
 if container_exists "$DOCKER_NAME_DB"; then

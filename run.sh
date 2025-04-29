@@ -18,7 +18,9 @@ if [ -z "${ODOO_DEPLOY_HOME}" ]; then
 fi
 
 # 获取当前shell脚本所在的目录
-RUN_HOME=$(cd "$(dirname "$0")" && pwd)
+if [ -z "${RUN_HOME}" ]; then
+    RUN_HOME=$(cd "$(dirname "$0")" && pwd)
+fi
 
 . "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 . "${RUN_HOME}${DIR_SEPARATOR}func.sh"
@@ -53,6 +55,10 @@ if [ "$1" = "install" ]; then
     ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}install.sh"
     chmod +x "${ODOO_START_SCRIPT}"
     sh "${ODOO_START_SCRIPT}"
+fi
+
+if [ "$1" = "up" ] || [ "$1" = "down" ] || [ "$1" = "start" ] || [ "$1" = "stop" ] || [ "$1" = "restart" ] || [ "$1" = "logs" ] || [ "$1" = "ps" ] || [ "$1" = "rm" ]; then
+    sh "${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}start.sh" "$1"
 fi
 
 if [ "$1" = "update" ]; then
