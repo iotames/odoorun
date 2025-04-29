@@ -61,7 +61,7 @@ fi
 
 # 启动容器
 if container_exists "$DOCKER_NAME_ODOO"; then
-    echo "容器 $DOCKER_NAME_ODOO 已存在"
+    echo "容器 $DOCKER_NAME_ODOO 已存在。请使用update命令更新容器。"
 else
     # 构建完整的docker run命令
     DOCKER_CMD="docker run -d --restart=always \
@@ -79,36 +79,5 @@ else
     
     # 执行命令
     eval "$DOCKER_CMD"
+    update_requirements
 fi
-
-# -e INSTALL_MODULES=base
-# "-- -i base" 整个命令参数，放在Docker命令的末尾
-# --restart always
-#   -v $ODOO_ADDONS:/mnt/extra-addons
-#   -v $ODOO_CONFIG:/mnt/config
-
-# docker run -d --name=santic_erp --restart=always \
-# -v /home/santic/odoo17.0:/odoo \
-# -p 8080:8069 \
-# --link db_16.0:db \
-# -t odoo17 /usr/bin/supervisord
-
-# --network=bridge 默认使用桥接网络
-# --runtime=runc 默认使用runc作为容器运行时
-# -t odoo17 /usr/bin/supervisord 指定容器的镜像和启动命令
-
-# https://hub.docker.com/_/odoo
-# docker run -v odoo-data:/var/lib/odoo -d -p 8069:8069 --name odoo --link db:db -t odoo
-# docker run -d -v odoo-db:/var/lib/postgresql/data -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
-
-# [options]
-# addons_path = /mnt/extra-addons,/mnt/extra-addons/santic/busyness,/mnt/extra-addons/santic/common,/mnt/extra-addons/santic/tech,/mnt/extra-addons/third_party/common,/mnt/extra-addons/third_party/tech,/mnt/extra-addons/third_party/busyness
-# data_dir = /var/lib/odoo
-# logfile = /var/log/odoo/odoo.log
-# db_host = db
-# db_maxconn = 1000
-# db_name = xxx
-# db_filer = xxx
-# db_password = odoo
-# db_user = odoo
-# without_demo = True

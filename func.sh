@@ -1,5 +1,18 @@
 #!/bin/sh
 
+# 函数：更新requirements.tx
+update_requirements() {
+    # 进入$DOCKER_NAME_ODOO容器执行命令
+    docker exec -it $DOCKER_NAME_ODOO /bin/bash -c "\
+        if [ -f /mnt/extra-addons/requirements.txt ]; then \
+            echo '检测到requirements.txt文件，开始安装依赖...' && \
+            pip install -r /mnt/extra-addons/requirements.txt \
+                -i https://mirrors.aliyun.com/pypi/simple/; \
+        else \
+            echo 'requirements.txt文件不存在，跳过依赖安装'; \
+        fi"
+}
+
 # 函数：登录Harbor（支持HTTP/HTTPS）
 login_harbor() {
     # 检查HARBOR_PASS是否为空

@@ -1,0 +1,12 @@
+services:
+  odoo:
+    image: odoo:17.0
+    # 覆盖默认启动命令，支持​​多参数组合​​和​​环境变量动态注入​​
+    # 注意：使用​ ​command​ ​​时，​ ​entrypoint​ ​会被忽略
+    command:
+      - --conf=/myconf/odoo.conf
+      - --dev=all                # 启用开发者模式
+      - --workers=0              # 禁用多进程模式（调试时使用）
+      - --log-level=debug        # 输出详细日志
+    volumes:
+      - ./custom_addons:/mnt/extra-addons  # 挂载自定义模块目录[2](@ref)

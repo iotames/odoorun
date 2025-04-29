@@ -25,21 +25,19 @@ if [ -f "$ODOO_CONFIG_FILE" ]; then
     # 读取并打印配置文件中的键值对
     echo "正在读取配置文件: $ODOO_CONFIG_FILE"
     # 一次性读取配置文件内容
-    CONFIG_CONTENT=$(cat "$ODOO_CONFIG_FILE")
+    # CONFIG_CONTENT=$(cat "$ODOO_CONFIG_FILE")
     # 调用函数添加配置项
     add_config_if_missing "data_dir" "/var/lib/odoo" "$ODOO_CONFIG_FILE"
     add_config_if_missing "logfile" "/var/log/odoo/odoo.log" "$ODOO_CONFIG_FILE"
 else
     echo "配置文件不存在: $ODOO_CONFIG_FILE"
+    exit 1
 fi
 
-# 进入$DOCKER_NAME_ODOO容器执行命令
-docker exec -it $DOCKER_NAME_ODOO /bin/bash -c "if [ -f /mnt/extra-addons/requirements.txt ]; then \
-    echo '检测到requirements.txt文件，开始安装依赖...' && \
-    pip install -r /mnt/extra-addons/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/; \
-else \
-    echo 'requirements.txt文件不存在，跳过依赖安装'; \
-fi"
+update_requirements
+# TODO 使用 -u all 更新所有模块
+# 执行命令
+# docker exec -u odoo $DOCKER_NAME_ODOO odoo -d $DB_NAME -u all --stop-after-init
 
 # 重启ODOO容器
 docker restart $DOCKER_NAME_ODOO
