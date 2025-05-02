@@ -23,9 +23,23 @@ if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
     echo "RUN_HOME: $RUN_HOME"
     echo "ODOO_DEPLOY_HOME: ${ODOO_DEPLOY_HOME}"
     show_conf
-    exit 0
+    # 如果第二个参数已设置且不为空
+    if [ -n "$2" ]; then
+        # 检查参数是否以--savefile=开头
+        if echo "$2" | grep -q "^--savefile="; then
+            # 提取--savefile=后面的文件名部分
+            filename=$(echo "$2" | sed 's/^--savefile=//')
+            echo "--------另存为配置文件(${filename})-----------------"
+            save_config "${filename}"
+        else
+            echo "------config命令不支持参数($2)-------------"
+            exit 1
+        fi
+        exit 0
+    fi
 fi
 
+# 首次运行的时候，安装镜像和容器
 if [ "$1" = "install" ]; then
     # 检查 ODOO_DEPLOY_HOME 目录是否存在
     if [ ! -d "${ODOO_DEPLOY_HOME}" ]; then

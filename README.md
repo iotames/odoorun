@@ -37,20 +37,23 @@ ODOO_ADDONS_GIT_BRANCH="master"
 # HTTPS_PROXY="socks5://127.0.0.1:7890"
 ```
 
-查看当前配置：
+查看当前配置，保存配置到指定文件，从指定文件启动docker-compose：
 
-```shell 
-sh run.sh config
+```shell
+# 查看当前配置：
+./run.sh config
+
+# 保存配置到指定文件：
+./run.sh config --savefile=my.env
+
+# 使用配置文件启动docker-compose：
+mkdir -p /root/erp && \
+mv my.env /root/erp/.env &&  \
+mv docker/docker-compose.yml /root/erp/ && \
+cd /root/erp && docker-compose up -d
 ```
-
-## 项目目录
-
-- `odoo` - Odoo 相关
-- `postgres` - PostgreSQL 相关
-- `docker` - Docker 相关
-
 
 ## 项目文件
 
 - `run.sh` - 项目启动脚本
-- `.env` - 环境变量配置。可以不用放在 `run.sh` 同级目录下。在哪个目录启动 `run.sh`，就会从哪个目录加载 `.env` 文件。
+- `.env` - 环境变量配置。可以不放在 `run.sh` 同级目录下。在哪个目录启动 `run.sh`，就会从哪个目录加载 `.env` 文件。

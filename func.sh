@@ -189,6 +189,36 @@ add_config_if_missing() {
     fi
 }
 
+# 函数：将当前环境变量保存到配置文件
+# 函数：将当前环境变量保存到配置文件
+save_config() {
+    local filepath="$1"
+    
+    # 检查参数
+    if [ -z "$filepath" ]; then
+        echo "错误：未指定配置文件路径"
+        return 1
+    fi
+    
+    # 创建或清空配置文件
+    : > "$filepath"
+    
+    # 定义要保存的环境变量列表（空格分隔）
+    local vars="ODOO_DEPLOY_HOME DOCKER_IMAGE_DB DOCKER_IMAGE_ODOO DOCKER_NAME_DB DOCKER_NAME_ODOO ODOO_WEB_PORT ODOO_DATA ODOO_CONFIG ODOO_ADDONS ODOO_LOG ODOO_ADDONS_PATH ODOO_ADDONS_GIT_URL ODOO_ADDONS_GIT_BRANCH DB_PORT DB_NAME DB_USER DB_PASSWORD PG_DATA_DIR HARBOR_URL HARBOR_USER HARBOR_PASS"
+    
+    # 遍历环境变量并保存到文件
+    for var in $vars; do
+        # 使用eval获取变量值
+        eval "value=\$$var"
+        if [ -n "$value" ]; then
+            echo "$var=$value" >> "$filepath"
+        fi
+    done
+    
+    echo "配置已保存到: $filepath"
+    return 0
+}
+
 # # /bin/sh 不支持使用 -f 导出函数
 # export -f add_config_if_missing
 # export -f get_config_value
