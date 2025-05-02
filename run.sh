@@ -70,11 +70,6 @@ if [ "$1" = "install" ]; then
     exit 0
 fi
 
-if [ "$1" = "up" ] || [ "$1" = "down" ] || [ "$1" = "start" ] || [ "$1" = "stop" ] || [ "$1" = "restart" ] || [ "$1" = "logs" ] || [ "$1" = "ps" ] || [ "$1" = "rm" ]; then
-    sh "${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}start.sh" "$1"
-    exit 0
-fi
-
 if [ "$1" = "update" ]; then
     ODOO_UPDATE_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}update.sh"
     chmod +x "${ODOO_UPDATE_SCRIPT}"
@@ -93,6 +88,11 @@ if [ "$1" = "docker" ]; then
     if [ "$DOCKER_ARG" = "init" ]; then
         DOCKER_INIT_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}init_etc.sh"
         sh "${DOCKER_INIT_SCRIPT}"
+        exit 0
+    fi
+    if [ "$DOCKER_ARG" = "recreate" ] || [ "$DOCKER_ARG" = "up" ] || [ "$DOCKER_ARG" = "down" ] || [ "$DOCKER_ARG" = "start" ] || [ "$DOCKER_ARG" = "stop" ] || [ "$DOCKER_ARG" = "restart" ] || [ "$DOCKER_ARG" = "logs" ] || [ "$DOCKER_ARG" = "ps" ] || [ "$DOCKER_ARG" = "rm" ]; then
+        sh "${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}start.sh" "$DOCKER_ARG"
+        exit 0
     fi
 fi
 

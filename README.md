@@ -53,7 +53,15 @@ cp docker/docker-compose.yml /root/erp/ && \
 cd /root/erp && docker-compose up -d
 ```
 
-## 项目文件
+## 启动命令
 
 - `run.sh` - 项目启动脚本
 - `.env` - 环境变量配置。可以不放在 `run.sh` 同级目录下。在哪个目录启动 `run.sh`，就会从哪个目录加载 `.env` 文件。
+
+1. 首次启动，下载镜像并启动Docker容器：`./run.sh install`
+2. 安装数据库：浏览器访问 `http://127.0.0.1:8069/`。填写 `Database Name`(数据库名)，`Email`(登录账号)，`Password`(密码)，点击 `Create database` 按钮。
+
+- 升级Odoo项目：`./run.sh update`
+- 保存 `环境变量配置` 到指定文件：`./run.sh config --savefile=/path/to/my.env`
+- 可以复制 `docker/docker-compose.yml` 文件到指定目录，搭配 `环境变量配置` 文件， 使用 `docker-compose` 命令管理容器。
+- 也可以直接使用命令：`./run.sh docker {recreate|up|down|start|stop|restart|logs|ps|rm}` 来调用 `docker-compose` 或 `docker compose` 命令管理容器。

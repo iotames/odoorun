@@ -1,7 +1,6 @@
 #!/bin/sh
 
 DOCKER_COMPOSE_FILE="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}docker-compose.yml"
-echo "DOCKER_COMPOSE_FILE: $DOCKER_COMPOSE_FILE"
 
 # # docker-compose 可能在子Shell执行，故export导出变量
 # export DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO
@@ -27,39 +26,49 @@ else
     DOCKER_CMD="docker compose"
 fi
 
-case "$1" in
+CMD_ARG="$1"
+FULL_CMD=""
+
+case "$CMD_ARG" in
+    "recreate")
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} up -d --force-recreate"
+        ;;
     "up")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} up -d
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} up -d"
         ;;
     "down")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} down
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} down"
         ;;
     "start")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} start
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} start"
         ;;
     "stop")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} stop
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} stop"
         ;;
     "restart")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} restart
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} restart"
         ;;
     "logs")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} logs
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} logs"
         ;;
     "ps")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} ps
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} ps"
         ;;
     "rm")
-        $DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} rm -f
+        FULL_CMD="$DOCKER_CMD -f ${DOCKER_COMPOSE_FILE} rm -f"
         ;;
     *)
         # 显示使用帮助
-        echo "用法: $0 {up|down|start|stop|restart|logs|ps|rm}"
+        echo "用法: $0 {recreate|up|down|start|stop|restart|logs|ps|rm}"
         exit 1
         ;;
 esac
 
+# 执行最终命令
+echo "执行命令: $FULL_CMD"
+eval "$FULL_CMD"
 
+# tail -n 90 -f odoo/log/myodoo.log
 # ./odoo-bin --save --config=odoo.conf 将当前配置保存到文件，便于复用
 # odoo-bin -i sale,purchase --stop-after-init
 # -u base,sale --stop-after-init
@@ -93,7 +102,7 @@ esac
 #   -p 8069:8069 \
 #   -v ./odoo_data:/var/lib/odoo \
 #   odoo:17.0 \
-#   odoo --dev=all --log-level=debug --without-demo=all
+#   odoo --dev=reload -u all --log-level=debug --without-demo=all
 
 # -e INSTALL_MODULES=base
 # "-- -i base" 整个命令参数，放在Docker命令的末尾

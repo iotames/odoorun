@@ -26,4 +26,6 @@ else
     # 执行命令
     eval "$DOCKER_CMD"
     update_requirements
+    # 安装数据库：浏览器访问 `http://127.0.0.1:8069/`
+    echo "SUCCESS: 容器启动成功！下一步，数据库初始化。请用浏览器访问：http://127.0.0.1:${ODOO_WEB_PORT}/"
 fi
