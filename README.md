@@ -49,7 +49,7 @@ ODOO_ADDONS_GIT_BRANCH="master"
 # 使用配置文件启动docker-compose：
 mkdir -p /root/erp && \
 mv my.env /root/erp/.env &&  \
-mv docker/docker-compose.yml /root/erp/ && \
+cp docker/docker-compose.yml /root/erp/ && \
 cd /root/erp && docker-compose up -d
 ```
 

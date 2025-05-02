@@ -1,2 +1,5 @@
+addons/
+config/
 data/
+log/
 .env
