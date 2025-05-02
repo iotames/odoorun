@@ -1,6 +1,7 @@
 #/bin/sh
 
-. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+# . "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+# conf.sh 里的变量，使用了export导出子Shell使用。已在run.sh中执行过了。这里不需要再导出了。
 . "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
 # 检查是否需要重新定义镜像名

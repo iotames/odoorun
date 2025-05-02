@@ -1,9 +1,8 @@
 #/bin/sh
 
-. "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+# . "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
+# conf.sh 里的变量，使用了export导出子Shell使用。已在run.sh中执行过了。这里不需要再导出了。
 . "${RUN_HOME}${DIR_SEPARATOR}func.sh"
-
-PG_DATA_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}data"
 
 # 检查并创建必要的目录
 check_and_mkdir "$PG_DATA_DIR"

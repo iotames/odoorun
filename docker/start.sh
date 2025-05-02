@@ -1,30 +1,23 @@
 #!/bin/sh
 
-# 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
-# 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
-# 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
-. "${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}prepare.sh"
-. "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
-
 DOCKER_COMPOSE_FILE="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}docker-compose.yml"
+echo "DOCKER_COMPOSE_FILE: $DOCKER_COMPOSE_FILE"
 
-
-# docker-compose 可能在子Shell执行，故export导出变量
-
-export DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO
-export DOCKER_NAME_ODOO=$DOCKER_NAME_ODOO
-export ODOO_WEB_PORT=$ODOO_WEB_PORT
-export ODOO_DATA=$ODOO_DATA
-export ODOO_CONFIG=$ODOO_CONFIG
-export ODOO_ADDONS=$ODOO_ADDONS
-export ODOO_LOG=$ODOO_LOG
-export DOCKER_IMAGE_DB=$DOCKER_IMAGE_DB
-export DOCKER_NAME_DB=$DOCKER_NAME_DB
-export DB_NAME=$DB_NAME
-export DB_USER=$DB_USER
-export DB_PASSWORD=$DB_PASSWORD
-export DB_PORT=$DB_PORT
-export PG_DATA_DIR=$PG_DATA_DIR
+# # docker-compose 可能在子Shell执行，故export导出变量
+# export DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO
+# export DOCKER_NAME_ODOO=$DOCKER_NAME_ODOO
+# export ODOO_WEB_PORT=$ODOO_WEB_PORT
+# export ODOO_DATA=$ODOO_DATA
+# export ODOO_CONFIG=$ODOO_CONFIG
+# export ODOO_ADDONS=$ODOO_ADDONS
+# export ODOO_LOG=$ODOO_LOG
+# export DOCKER_IMAGE_DB=$DOCKER_IMAGE_DB
+# export DOCKER_NAME_DB=$DOCKER_NAME_DB
+# export DB_NAME=$DB_NAME
+# export DB_USER=$DB_USER
+# export DB_PASSWORD=$DB_PASSWORD
+# export DB_PORT=$DB_PORT
+# export PG_DATA_DIR=$PG_DATA_DIR
 
 # 检查系统是否存在docker-compose命令
 if command -v docker-compose >/dev/null 2>&1; then

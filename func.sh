@@ -188,3 +188,16 @@ add_config_if_missing() {
         eval "$add_conf_cmd"
     fi
 }
+
+# # /bin/sh 不支持使用 -f 导出函数
+# export -f add_config_if_missing
+# export -f get_config_value
+# export -f check_docker_installed
+# export -f restart_docker
+# export -f chown_odoo_dir
+# export -f check_and_mkdir
+# export -f container_exists
+# export -f image_exists
+# export -f get_harbor_image
+# export -f login_harbor
+# export -f update_requirements

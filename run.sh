@@ -1,20 +1,8 @@
 #!/bin/sh
 
-# 如果存在 .env 文件，从中读取环境变量
-if [ -f .env ]; then
-    # https://stackoverflow.com/questions/19331497/set-environment-variables-from-file-of-key-value-pairs
-    echo "发现.env文件，加载环境变量..."
-    export $(cat .env | sed 's/#.*//g' | xargs)
-fi
-
 # 获取目录分隔符：如果不存在 DIR_SEPARATOR 环境变量，设置为 '/'
 if [ -z "${DIR_SEPARATOR}" ]; then
     DIR_SEPARATOR='/'
-fi
-
-# 获取 Odoo 部署目录：如果不存在 ODOO_DEPLOY_HOME 环境变量，设置为当前项目根目录
-if [ -z "${ODOO_DEPLOY_HOME}" ]; then
-    ODOO_DEPLOY_HOME=$(pwd)
 fi
 
 # 获取当前shell脚本所在的目录
@@ -22,19 +10,18 @@ if [ -z "${RUN_HOME}" ]; then
     RUN_HOME=$(cd "$(dirname "$0")" && pwd)
 fi
 
+# 使用export语法，使得变量可以传递到后续的脚本中
+export DIR_SEPARATOR RUN_HOME
+
 . "${RUN_HOME}${DIR_SEPARATOR}conf.sh"
 . "${RUN_HOME}${DIR_SEPARATOR}func.sh"
 
-# 使用export语法，使得变量可以传递到后续的脚本中
-export DIR_SEPARATOR ODOO_DEPLOY_HOME RUN_HOME
-
 # 如果第一个参数是 config 或 conf，则输出所有配置项
 if [ "$1" = "config" ] || [ "$1" = "conf" ]; then
-    echo "当前配置项:"
-    echo "----------------------------------------"
+    echo "--------------基础配置------------------"
     echo "DIR_SEPARATOR: ${DIR_SEPARATOR}"
-    echo "ODOO_DEPLOY_HOME: ${ODOO_DEPLOY_HOME}"
     echo "RUN_HOME: $RUN_HOME"
+    echo "ODOO_DEPLOY_HOME: ${ODOO_DEPLOY_HOME}"
     show_conf
     exit 0
 fi
@@ -49,16 +36,29 @@ if [ "$1" = "install" ]; then
     # 启动 Postgres 容器
     PG_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}start.sh"
     chmod +x "${PG_START_SCRIPT}"
-    sh "${PG_START_SCRIPT}"
 
     # 启动 Odoo容器
     ODOO_START_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}install.sh"
     chmod +x "${ODOO_START_SCRIPT}"
+
+    if [ "$2" = "pg" ] || [ "$2" = "postgres" ]; then
+        sh "${PG_START_SCRIPT}"
+        exit 0
+    fi
+
+    if [ "$2" = "odoo" ]; then
+        sh "${ODOO_START_SCRIPT}"
+        exit 0
+    fi
+
+    sh "${PG_START_SCRIPT}"
     sh "${ODOO_START_SCRIPT}"
+    exit 0
 fi
 
 if [ "$1" = "up" ] || [ "$1" = "down" ] || [ "$1" = "start" ] || [ "$1" = "stop" ] || [ "$1" = "restart" ] || [ "$1" = "logs" ] || [ "$1" = "ps" ] || [ "$1" = "rm" ]; then
     sh "${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}start.sh" "$1"
+    exit 0
 fi
 
 if [ "$1" = "update" ]; then
@@ -80,4 +80,12 @@ if [ "$1" = "docker" ]; then
         DOCKER_INIT_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}init_etc.sh"
         sh "${DOCKER_INIT_SCRIPT}"
     fi
+fi
+
+if [ "$1" = "prepare" ]; then
+    # 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
+    # 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
+    # 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
+    . "${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}prepare.sh"
+    . "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
 fi
