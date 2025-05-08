@@ -48,16 +48,6 @@ if [ ! -f "$ODOO_CONFIG_FILE" ]; then
     echo "创建配置文件 $ODOO_CONFIG_FILE"
     echo "[options]" > "$ODOO_CONFIG_FILE"
     echo "addons_path = $ODOO_ADDONS_PATH" >> "$ODOO_CONFIG_FILE"
+    echo "data_dir = /var/lib/odoo" >> "$ODOO_CONFIG_FILE"
+    echo "logfile = /var/log/odoo/odoo.log" >> "$ODOO_CONFIG_FILE"
 fi
-
-# 检查并创建必要的目录
-check_and_mkdir "$ODOO_CONFIG"
-check_and_mkdir "$ODOO_ADDONS"
-check_and_mkdir "$ODOO_DATA"
-check_and_mkdir "$ODOO_LOG"
-
-# 赋予目录所有者权限
-chown_odoo_dir "$ODOO_CONFIG"
-chown_odoo_dir "$ODOO_ADDONS"
-chown_odoo_dir "$ODOO_DATA"
-chown_odoo_dir "$ODOO_LOG"
