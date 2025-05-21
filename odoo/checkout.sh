@@ -15,7 +15,7 @@ if [ -d "${ODOO_ADDONS}/.git" ]; then
         CHECKOUT_ARG=`git tag -l | sort -V | tail -n 1`
     fi
     echo "------切换到tag: $CHECKOUT_ARG"
-    SWITCH_CMD="git pull origin ${ODOO_ADDONS_GIT_BRANCH}:${ODOO_ADDONS_GIT_BRANCH} && \
+    SWITCH_CMD="git fetch origin ${ODOO_ADDONS_GIT_BRANCH} && git merge origin/${ODOO_ADDONS_GIT_BRANCH} && \
 git switch ${ODOO_ADDONS_GIT_BRANCH} && git fetch --tags && \
 git checkout $CHECKOUT_ARG"
     echo "------执行命令: $SWITCH_CMD"

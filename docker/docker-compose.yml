@@ -23,12 +23,12 @@ services:
     # 覆盖默认启动命令，支持​​多参数组合​​和​​环境变量动态注入​​
     # 注意：使用​ ​command​ ​​时，​ ​entrypoint​ ​会被忽略
     command:
+      - -u
+      - ${ODOO_UPDATE_MODULES}    
       - --without-demo=all
-      - --log-level=debug        # 输出详细日志
+      - --log-level=info
       # - --save                   #将当前配置保存到文件，便于复用
       # - --dev=reload             # 启用热加载      
-      # - -u
-      # - all
       # - --conf=/mnt/extra-addons/odoo.conf
       # - --workers=0              # 禁用多进程模式（调试时使用）      
 # /usr/bin/python3 /usr/bin/odoo --without-demo=all --dev=reload --log-level=debug -u all --conf=/mnt/extra-addons/odoo.conf --workers=0 --db_host db --db_port 5432 --db_user odoo --db_password odoo

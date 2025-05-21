@@ -9,14 +9,14 @@
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
     # 检查是否存在.git目录
     if [ -d "${ODOO_ADDONS}/.git" ]; then
-        echo "检测到${ODOO_ADDONS}目录存在.git，执行git pull操作..."
+        echo "检测到${ODOO_ADDONS}目录存在.git，执行git fetch操作..."
         # git config --global --add safe.directory ${ODOO_ADDONS}
-        # 定义git pull命令
-        PULL_CMD="cd \"$ODOO_ADDONS\" && git pull origin ${ODOO_ADDONS_GIT_BRANCH}:${ODOO_ADDONS_GIT_BRANCH} && git switch ${ODOO_ADDONS_GIT_BRANCH}"
+        # 定义git fetch命令
+        PULL_CMD="cd \"$ODOO_ADDONS\" && git fetch origin ${ODOO_ADDONS_GIT_BRANCH} && git merge origin/${ODOO_ADDONS_GIT_BRANCH} && git switch ${ODOO_ADDONS_GIT_BRANCH}"
         echo "执行命令: $PULL_CMD"
         eval "$PULL_CMD"
     else
-        echo "${ODOO_ADDONS}目录下不存在.git目录，跳过git pull操作"
+        echo "${ODOO_ADDONS}目录下不存在.git目录，跳过git fetch操作"
     fi
 fi
 
@@ -37,8 +37,11 @@ fi
 
 # 更新requirements.txt模块依赖
 update_requirements
-# 更新所有模块
-docker exec $DOCKER_NAME_ODOO odoo -u all --stop-after-init
+
+# 更新模块
+UPDATE_CMD="docker exec $DOCKER_NAME_ODOO odoo -u $ODOO_UPDATE_MODULES --stop-after-init"
+echo "执行命令: $UPDATE_CMD"
+eval "$UPDATE_CMD"
 
 # 重启ODOO容器
 docker restart $DOCKER_NAME_ODOO

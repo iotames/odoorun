@@ -78,6 +78,10 @@ if [ -z "${ODOO_ADDONS_GIT_BRANCH}" ]; then
     ODOO_ADDONS_GIT_BRANCH='dev'
 fi
 
+if [ -z "${ODOO_UPDATE_MODULES}" ]; then
+    ODOO_UPDATE_MODULES='all'
+fi
+
 show_conf() {
     echo "-------------容器基础配置--------------------"
     echo "DOCKER_IMAGE_DB: ${DOCKER_IMAGE_DB}"
@@ -103,6 +107,7 @@ show_conf() {
     echo "ODOO_ADDONS_PATH: ${ODOO_ADDONS_PATH}"
     echo "ODOO_ADDONS_GIT_URL: ${ODOO_ADDONS_GIT_URL}"
     echo "ODOO_ADDONS_GIT_BRANCH: ${ODOO_ADDONS_GIT_BRANCH}"
+    echo "ODOO_UPDATE_MODULES: ${ODOO_UPDATE_MODULES}"
 }
 
 # 配置变量
@@ -123,6 +128,7 @@ export ODOO_LOG
 export ODOO_ADDONS_PATH
 export ODOO_ADDONS_GIT_URL
 export ODOO_ADDONS_GIT_BRANCH
+export ODOO_UPDATE_MODULES
 export DB_PORT
 export DB_NAME
 export DB_USER

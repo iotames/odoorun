@@ -5,12 +5,6 @@
 # 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
 . "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
 
-# 检查并创建必要的目录
-check_and_mkdir "$ODOO_CONFIG"
-check_and_mkdir "$ODOO_ADDONS"
-check_and_mkdir "$ODOO_DATA"
-check_and_mkdir "$ODOO_LOG"
-
 # 赋予目录所有者权限
 chown_odoo_dir "$ODOO_CONFIG"
 chown_odoo_dir "$ODOO_ADDONS"

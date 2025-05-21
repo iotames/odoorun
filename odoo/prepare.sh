@@ -31,6 +31,12 @@ else
     echo "镜像 ${DOCKER_IMAGE_ODOO} 已存在"
 fi
 
+# 检查并创建必要的目录
+check_and_mkdir "$ODOO_CONFIG"
+check_and_mkdir "$ODOO_ADDONS"
+check_and_mkdir "$ODOO_DATA"
+check_and_mkdir "$ODOO_LOG"
+
 # 检查是否需要克隆仓库
 if [ -n "${ODOO_ADDONS_GIT_URL:-}" ] && [ "$ODOO_ADDONS_GIT_URL" != "" ]; then
     # 检查目录是否为空
