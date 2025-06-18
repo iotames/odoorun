@@ -39,7 +39,12 @@ fi
 update_requirements
 
 # 更新模块
-UPDATE_CMD="docker exec $DOCKER_NAME_ODOO odoo -u $ODOO_UPDATE_MODULES --stop-after-init"
+
+if [ -z "${ODOO_UPDATE_MODULES}" ]; then
+    UPDATE_CMD="docker exec $DOCKER_NAME_ODOO odoo --stop-after-init"
+else
+    UPDATE_CMD="docker exec $DOCKER_NAME_ODOO odoo -u $ODOO_UPDATE_MODULES --stop-after-init"
+fi
 echo "执行命令: $UPDATE_CMD"
 eval "$UPDATE_CMD"
 

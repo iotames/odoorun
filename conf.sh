@@ -78,9 +78,9 @@ if [ -z "${ODOO_ADDONS_GIT_BRANCH}" ]; then
     ODOO_ADDONS_GIT_BRANCH='dev'
 fi
 
-if [ -z "${ODOO_UPDATE_MODULES}" ]; then
-    ODOO_UPDATE_MODULES='all'
-fi
+# if [ -z "${ODOO_UPDATE_MODULES}" ]; then
+#     ODOO_UPDATE_MODULES='all'
+# fi
 
 show_conf() {
     echo "-------------容器基础配置--------------------"
