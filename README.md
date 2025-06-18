@@ -65,3 +65,20 @@ mv my.env /root/erp/.env &&  \
 cp docker/docker-compose.yml /root/erp/ && \
 cd /root/erp && docker-compose up -d
 ```
+
+
+## 使用私有镜像源（Harbor）
+
+- 登录地址：http://172.16.160.33:9000/
+- 登录账号：`admin`
+- 登录密码：见 `harbor.yml` 文件的 `harbor_admin_password` 配置项
+
+编辑 `/etc/docker/daemon.json` 文件，添加 Harbor 地址（定义私有仓库地址）至 `insecure-registries` 配置中：
+
+```
+{
+  "insecure-registries": ["172.16.160.33:9000"]
+}
+```
+
+重启docker使得配置生效：`systemctl restart docker` 或 `service docker restart`
