@@ -16,6 +16,7 @@ if container_exists "$DOCKER_NAME_ODOO"; then
     echo "容器 $DOCKER_NAME_ODOO 已存在。请使用update命令更新容器。"
 else
     # 构建完整的docker run命令
+    # -u $PUID:$PGID \
     DOCKER_CMD="docker run -d --restart=always \
       -p $ODOO_WEB_PORT:8069 \
       -v $ODOO_DATA:/var/lib/odoo \

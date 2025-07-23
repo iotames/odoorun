@@ -17,7 +17,7 @@ if [ -z "${DOCKER_IMAGE_DB}" ]; then
 fi
 
 if [ -z "${DOCKER_IMAGE_ODOO}" ]; then
-    DOCKER_IMAGE_ODOO="odoo:17.0-20250401"
+    DOCKER_IMAGE_ODOO="odoo:17.0-20250710"
 fi
 
 if [ -z "${DOCKER_NAME_DB}" ]; then
@@ -76,6 +76,19 @@ fi
 
 if [ -z "${ODOO_ADDONS_GIT_BRANCH}" ]; then
     ODOO_ADDONS_GIT_BRANCH='dev'
+fi
+
+# Odoo内部用户和用户组为101
+
+if [ -z "${PUID}" ]; then
+    # PUID=`id -u`
+    # PUID=$(id -u)
+    PUID=101
+fi
+
+if [ -z "${PGID}" ]; then
+    # PGID=$(id -g)
+    PGID=101
 fi
 
 # if [ -z "${ODOO_UPDATE_MODULES}" ]; then

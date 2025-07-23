@@ -16,6 +16,7 @@ else
       -e POSTGRES_DB=$DB_NAME \
       -v $PG_DATA_DIR:/var/lib/postgresql/data \
       -p $DB_PORT:5432 \
+      -u $PUID:$PGID \
       --name $DOCKER_NAME_DB \
       $DOCKER_IMAGE_DB"
     

@@ -84,7 +84,9 @@ check_and_mkdir() {
 # 设置目录为Odoo容器的用户和组
 chown_odoo_dir() {
   local dirpath=$1
-  CHOWN_CMD="chown -R 101:101 $dirpath"
+  # Odoo内部用户和用户组为101
+#   CHOWN_CMD="chown -R 101:101 $dirpath"
+  CHOWN_CMD="chown -R ${PUID}:${PGID} $dirpath"
   echo "执行命令: $CHOWN_CMD"
   eval "$CHOWN_CMD"
 }

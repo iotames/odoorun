@@ -2,7 +2,7 @@
 
 export ODOO_DEPLOY_HOME=/home/myname/erp
 export DOCKER_IMAGE_DB=172.16.160.33:9000/library/postgres:17.4-bookworm
-export DOCKER_IMAGE_ODOO=172.16.160.33:9000/library/odoo:17.0-20250401
+export DOCKER_IMAGE_ODOO=172.16.160.33:9000/library/odoo:17.0-20250710
 export DOCKER_NAME_DB=odoodb
 export DOCKER_NAME_ODOO=odooweb
 export ODOO_WEB_PORT=8080
@@ -20,5 +20,11 @@ export DB_PASSWORD=odoo
 export PG_DATA_DIR=/home/myname/erp/postgres/data
 # export HARBOR_URL=
 export ODOO_UPDATE_MODULES=product
+
+# Odoo内部用户和用户组为101
+# export PUID=`id -u`
+# export PGID=`id -g`
+# export PUID=$(id -u)
+# export PGID=$(id -g)
 
 # docker compose up -d
