@@ -18,6 +18,8 @@ else
     fi
 fi
 
+echo "定义容器镜像：DOCKER_IMAGE_DB=$DOCKER_IMAGE_DB"
+
 # 拉取镜像
 if ! image_exists "$DOCKER_IMAGE_DB"; then
     if ! docker pull ${DOCKER_IMAGE_DB}; then

@@ -84,6 +84,11 @@ if [ "$1" = "checkout" ]; then
 fi
 
 if [ "$1" = "docker" ]; then
+    # 在当前Shell环境中执行prepare.sh脚本文件，而非启动子Shell
+    # 因此，prepare.sh脚本的变量，不需要export，就能在当前Shell中使用。
+    # 要让其他Shell也能使用这些变量，则需要使用export命令将它们导出。
+    . "${RUN_HOME}${DIR_SEPARATOR}postgres${DIR_SEPARATOR}prepare.sh"
+    . "${RUN_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}prepare.sh"
     DOCKER_ARG="$2"
     if [ "$DOCKER_ARG" = "init" ]; then
         DOCKER_INIT_SCRIPT="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}init_etc.sh"

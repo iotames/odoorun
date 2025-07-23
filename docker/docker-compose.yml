@@ -23,11 +23,14 @@ services:
     # 覆盖默认启动命令，支持​​多参数组合​​和​​环境变量动态注入​​
     # 注意：使用​ ​command​ ​​时，​ ​entrypoint​ ​会被忽略
     command:
-      # - -u
-      # - ${ODOO_UPDATE_MODULES}    
+      - -u
+      - ${ODOO_UPDATE_MODULES}    
       - --without-demo=all
-      - --log-level=info
-      # - --save                   #将当前配置保存到文件，便于复用
+      # 将当前配置保存到文件，便于复用
+      - --save
+      # - -d
+      # - the_dbname
+      # - --log-level=info
       # - --dev=reload             # 启用热加载      
       # - --conf=/mnt/extra-addons/odoo.conf
       # - --workers=0              # 禁用多进程模式（调试时使用）      

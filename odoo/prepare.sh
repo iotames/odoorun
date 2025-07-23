@@ -15,6 +15,8 @@ else
     fi
 fi
 
+echo "定义容器镜像：DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO"
+
 # 拉取镜像
 if ! image_exists "$DOCKER_IMAGE_ODOO"; then
     # 镜像不存在，执行构建。构建前，可使用docker run -it --rm ubuntu:jammy bash命令进行分步调试。
@@ -22,7 +24,7 @@ if ! image_exists "$DOCKER_IMAGE_ODOO"; then
     # DOCKER_BUILD_DIR="${ODOO_DEPLOY_HOME}${DIR_SEPARATOR}odoo${DIR_SEPARATOR}17.0"
     # echo "DOCKER_BUILD_DIR=${DOCKER_BUILD_DIR}"
     # docker build --progress=plain --no-cache -t DOCKER_IMAGE_ODOO ${DOCKER_BUILD_DIR}
-    # 尝试拉取镜像
+    echo "正在拉取镜像：${DOCKER_IMAGE_ODOO} ..."
     if ! docker pull ${DOCKER_IMAGE_ODOO}; then
         echo "拉取镜像 ${DOCKER_IMAGE_ODOO} 失败，程序退出"
         exit 1

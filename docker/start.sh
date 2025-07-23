@@ -2,21 +2,23 @@
 
 DOCKER_COMPOSE_FILE="${RUN_HOME}${DIR_SEPARATOR}docker${DIR_SEPARATOR}docker-compose.yml"
 
-# # docker-compose 可能在子Shell执行，故export导出变量
-# export DOCKER_IMAGE_ODOO=$DOCKER_IMAGE_ODOO
-# export DOCKER_NAME_ODOO=$DOCKER_NAME_ODOO
-# export ODOO_WEB_PORT=$ODOO_WEB_PORT
-# export ODOO_DATA=$ODOO_DATA
-# export ODOO_CONFIG=$ODOO_CONFIG
-# export ODOO_ADDONS=$ODOO_ADDONS
-# export ODOO_LOG=$ODOO_LOG
-# export DOCKER_IMAGE_DB=$DOCKER_IMAGE_DB
-# export DOCKER_NAME_DB=$DOCKER_NAME_DB
-# export DB_NAME=$DB_NAME
-# export DB_USER=$DB_USER
-# export DB_PASSWORD=$DB_PASSWORD
-# export DB_PORT=$DB_PORT
-# export PG_DATA_DIR=$PG_DATA_DIR
+# docker-compose 可能在子Shell执行，故export导出变量
+export DOCKER_IMAGE_ODOO
+export DOCKER_NAME_ODOO
+export ODOO_WEB_PORT
+export ODOO_DATA
+export ODOO_CONFIG
+export ODOO_ADDONS
+export ODOO_LOG
+export DOCKER_IMAGE_DB
+export DOCKER_NAME_DB
+export DB_NAME
+export DB_USER
+export DB_PASSWORD
+export DB_PORT
+export PG_DATA_DIR
+export ODOO_UPDATE_MODULES
+
 
 # 检查系统是否存在docker-compose命令
 if command -v docker-compose >/dev/null 2>&1; then
