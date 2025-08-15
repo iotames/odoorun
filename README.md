@@ -69,6 +69,8 @@ cd /root/erp && docker-compose up -d
 
 ## 使用私有镜像源（Harbor）
 
+### Harbor基础配置
+
 - 登录地址：http://172.16.160.33:9000/
 - 登录账号：`admin`
 - 登录密码：见 `harbor.yml` 文件的 `harbor_admin_password` 配置项
@@ -82,3 +84,69 @@ cd /root/erp && docker-compose up -d
 ```
 
 重启docker使得配置生效：`systemctl restart docker` 或 `service docker restart`
+
+### Harbor镜像准备
+
+```bash
+# 拉取公共镜像
+docker pull odoo:18.0-20250807
+# 给公共镜像打一个新标签，以便下一步上传镜像到私有镜像仓库
+docker tag odoo:18.0-20250807 172.16.160.33:9000/library/odoo:18.0-20250807
+# 使用密码登录私有镜像仓库
+docker login -u admin -p yourpassword http://172.16.160.33:9000
+# 上传镜像到私有镜像仓库
+docker push 172.16.160.33:9000/library/odoo:18.0-20250807
+```
+
+注：`docker login` 的 `--password` （`-p`）命令会有警告。
+
+```bash
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/yourname/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credential-stores
+```
+
+### 配置和安装Odoo
+
+1. 创建项目根目录，用于存放Odoo数据和Postgre数据
+
+```bash
+mkdir -p /home/yourname/erp
+cd /home/yourname/erp
+touch .env
+```
+
+2. 在项目根目录新建或编辑 `.env` 文件：
+
+```conf
+ODOO_DEPLOY_HOME=/home/yourname/erp
+DOCKER_IMAGE_DB=postgres:17.4-bookworm
+DOCKER_IMAGE_ODOO=odoo:18.0-20250807
+DOCKER_NAME_DB=odoodb
+DOCKER_NAME_ODOO=odooweb
+ODOO_WEB_PORT=8080
+ODOO_DATA=/home/yourname/erp/odoo/data
+ODOO_CONFIG=/home/yourname/erp/odoo/config
+ODOO_ADDONS=/home/yourname/erp/odoo/addons
+ODOO_LOG=/home/yourname/erp/odoo/log
+#ODOO_ADDONS_PATH=/mnt/extra-addons
+#ODOO_ADDONS_GIT_URL=http://xxxxx.com/xxx/xxx_erp_odoo.git
+#ODOO_ADDONS_GIT_BRANCH=dev
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=odoo
+DB_PASSWORD=odoo
+PG_DATA_DIR=/home/yourname/erp/postgres/data
+HARBOR_URL=http://172.16.160.33:9000/
+#ODOO_UPDATE_MODULES=module1,module2,module3
+PUID=1000
+PGID=1000
+```
+
+3. 启动项目
+
+```bash
+# 运行安装命令。当前命令的工作目录，要有 .env 配置文件
+/yourpath/odoorun/run.sh install
+```
